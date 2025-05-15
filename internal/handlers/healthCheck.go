@@ -8,7 +8,7 @@ import (
 	"github.com/prajwalbharadwajbm/gupload/internal/logger"
 )
 
-func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
+func HealthCheck(w http.ResponseWriter, r *http.Request) {
 	envelope := map[string]interface{}{
 		"status": "available",
 		"application-details": map[string]interface{}{
