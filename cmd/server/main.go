@@ -9,9 +9,10 @@ import (
 const version = "1.0.0"
 
 func init() {
-	loadAllConfigs()
+	config.LoadConfigs()
 	initializeGlobalLogger()
 	loadDatabaseClient()
+	logger.Log.Info("loaded all configs")
 }
 
 func initializeGlobalLogger() {
@@ -19,11 +20,6 @@ func initializeGlobalLogger() {
 	logLevel := config.AppConfigInstance.GeneralConfig.LogLevel
 	logger.InitializeGlobalLogger(logLevel, env, version+"-file-upload-service")
 	logger.Log.Info("loaded the global logger")
-}
-
-func loadAllConfigs() {
-	config.LoadConfigs()
-	logger.Log.Info("loaded all configs")
 }
 
 func loadDatabaseClient() {
