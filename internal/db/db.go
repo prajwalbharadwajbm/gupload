@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	_ "github.com/lib/pq"
 	"github.com/prajwalbharadwajbm/gupload/internal/config"
 	"github.com/prajwalbharadwajbm/gupload/internal/logger"
 )
