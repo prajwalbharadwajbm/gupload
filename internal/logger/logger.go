@@ -15,16 +15,13 @@ var Log *Logger
 
 // InitializeGlobalLogger creates and configures the global logger instance
 func InitializeGlobalLogger(level, env, serviceName string) {
-	// Configure zerolog
 	zerolog.TimeFieldFormat = time.RFC3339
 
-	// Set up console writer with color
 	output := zerolog.ConsoleWriter{
 		Out:        os.Stdout,
 		TimeFormat: time.RFC3339,
 	}
 
-	// Create base logger
 	zeroLogger := zerolog.New(output).
 		With().
 		Timestamp().
@@ -32,7 +29,6 @@ func InitializeGlobalLogger(level, env, serviceName string) {
 		Str("env", env).
 		Logger()
 
-	// Set appropriate log level
 	var logLevel zerolog.Level
 	switch level {
 	case "debug":
@@ -48,28 +44,23 @@ func InitializeGlobalLogger(level, env, serviceName string) {
 	}
 	zeroLogger = zeroLogger.Level(logLevel)
 
-	// Initialize global instance
 	Log = &Logger{
 		logger: zeroLogger,
 	}
 }
 
-// Debug logs a debug message
 func (l *Logger) Debug(msg string, fields ...interface{}) {
 	l.logger.Debug().Msg(msg)
 }
 
-// Info logs an info message
 func (l *Logger) Info(msg string, fields ...interface{}) {
 	l.logger.Info().Msg(msg)
 }
 
-// Error logs an error message
 func (l *Logger) Error(msg string, err error, fields ...interface{}) {
 	l.logger.Error().Err(err).Msg(msg)
 }
 
-// Fatal logs a fatal message and exits the application
 func (l *Logger) Fatal(msg string, err error) {
 	l.logger.Fatal().Err(err).Msg(msg)
 }
