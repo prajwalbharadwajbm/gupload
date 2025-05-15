@@ -10,7 +10,7 @@ import (
 type GeneralConfig struct {
 	Env      string
 	LogLevel string
-	Port     string
+	Port     int
 }
 
 type appConfig struct {
@@ -40,13 +40,17 @@ func LoadConfigs() {
 var AppConfigInstance appConfig
 
 func loadGeneralConfigs() {
-	AppConfigInstance.GeneralConfig.Env = utils.GetEnv("APP_ENV", "dev").(string)
-	AppConfigInstance.GeneralConfig.LogLevel = utils.GetEnv("LOG_LEVEL", "info").(string)
-	AppConfigInstance.GeneralConfig.Port = utils.GetEnv("PORT", "8080").(string)
+	AppConfigInstance.GeneralConfig.Env = utils.GetEnv("APP_ENV", "dev")
+	AppConfigInstance.GeneralConfig.LogLevel = utils.GetEnv("LOG_LEVEL", "info")
+	portStr := utils.GetEnv("PORT", "8080")
+	AppConfigInstance.GeneralConfig.Port = utils.StringToInt(portStr)
 }
 
 func loadDatabaseConfigs() {
-	AppConfigInstance.DB.Host = utils.GetEnv("DB_HOST", "").(string)
-	AppConfigInstance.DB.Port = (utils.GetEnv("DB_PORT", "")).(int)
-	AppConfigInstance.DB.DBname = utils.GetEnv("DB_NAME", "").(string)
+	AppConfigInstance.DB.Host = utils.GetEnv("DB_HOST", "localhost")
+	portStr := utils.GetEnv("DB_PORT", "5432")
+	AppConfigInstance.DB.Port = utils.StringToInt(portStr)
+	AppConfigInstance.DB.User = utils.GetEnv("DB_USER", "postgres")
+	AppConfigInstance.DB.Password = utils.GetEnv("DB_PASSWORD", "")
+	AppConfigInstance.DB.DBname = utils.GetEnv("DB_NAME", "fileupload")
 }
