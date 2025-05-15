@@ -7,7 +7,6 @@ import (
 
 	"github.com/prajwalbharadwajbm/gupload/internal/config"
 	"github.com/prajwalbharadwajbm/gupload/internal/db"
-	"github.com/prajwalbharadwajbm/gupload/internal/handlers"
 	"github.com/prajwalbharadwajbm/gupload/internal/logger"
 )
 
@@ -32,10 +31,10 @@ func loadDatabaseClient() {
 }
 
 func main() {
-	http.HandleFunc("/healthCheck", handlers.HealthCheckHandler)
 
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", config.AppConfigInstance.GeneralConfig.Port),
+		Handler:      Routes(),
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 30 * time.Second,
 		IdleTimeout:  120 * time.Second,
