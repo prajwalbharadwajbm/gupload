@@ -11,9 +11,9 @@ func AddUser(ctx context.Context, username string, password []byte) (string, err
 	db := db.GetClient()
 	userId := uuid.New().String()
 	query := `INSERT INTO users (id, username, password) VALUES ($1, $2, $3)`
-	err := db.QueryRowContext(ctx, query, userId, username, password)
+	_, err := db.ExecContext(ctx, query, userId, username, password)
 	if err != nil {
-		return "", err.Err()
+		return "", err
 	}
 	return userId, nil
 }

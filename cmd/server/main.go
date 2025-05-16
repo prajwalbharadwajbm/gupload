@@ -31,7 +31,6 @@ func loadDatabaseClient() {
 }
 
 func main() {
-
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", config.AppConfigInstance.GeneralConfig.Port),
 		Handler:      Routes(),

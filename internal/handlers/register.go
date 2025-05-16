@@ -30,13 +30,16 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseID, err := registerUser(ctx, userData)
+	userID, err := registerUser(ctx, userData)
 	if err != nil {
 		logger.Log.Error("unable to register user", err)
 		interceptor.SendErrorResponse(w, "GUPLD101", http.StatusBadRequest)
 		return
 	}
-	interceptor.SendSuccessResponse(w, responseID, http.StatusOK)
+	response := map[string]interface{}{
+		"userID": userID,
+	}
+	interceptor.SendSuccessResponse(w, response, http.StatusOK)
 }
 
 func registerUser(ctx context.Context, userData dtos.User) (string, error) {
