@@ -35,6 +35,7 @@ func LoadConfigs() {
 
 	loadGeneralConfigs()
 	loadDatabaseConfigs()
+	loadJWTConfigs()
 }
 
 var AppConfigInstance appConfig
@@ -53,4 +54,8 @@ func loadDatabaseConfigs() {
 	AppConfigInstance.DB.User = utils.GetEnv("DB_USER", "postgres")
 	AppConfigInstance.DB.Password = utils.GetEnv("DB_PASSWORD", "")
 	AppConfigInstance.DB.DBname = utils.GetEnv("DB_NAME", "fileupload")
+}
+
+func loadJWTConfigs() {
+	AppConfigInstance.JWTSecret = utils.GetEnv("JWT_SECRET", "")
 }
