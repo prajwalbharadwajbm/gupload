@@ -18,6 +18,7 @@ func Routes() *httprouter.Router {
 
 	// Protected Endpoints
 	router.HandlerFunc(http.MethodPost, "/upload", middleware.AuthMiddleware(handlers.Upload))
+	router.HandlerFunc(http.MethodGet, "/storage/remaining", middleware.AuthMiddleware(handlers.StorageRemaining))
 
 	return router
 }

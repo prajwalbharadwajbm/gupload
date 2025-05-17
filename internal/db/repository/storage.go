@@ -46,3 +46,15 @@ func UpdateStorageQuota(ctx context.Context, size int64) error {
 	}
 	return nil
 }
+
+func GetStorageRemaining(ctx context.Context) (int, int, error) {
+	db := db.GetClient()
+
+	var storageQuota, storageRemaining int
+	query := `SELECT max_bytes, used_bytes FROM storage_quota WHERE user_id = $1::uuid`
+	err := db.QueryRowContext(ctx, query, ctx.Value("userId")).Scan(&storageQuota, &storageRemaining)
+	if err != nil {
+		return 0, 0, err
+	}
+	return storageQuota, storageRemaining, nil
+}
