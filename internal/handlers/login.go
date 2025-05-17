@@ -51,6 +51,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		"token":   token,
 		"user_id": userId,
 	}
+	logger.Log.Infof("Successfully logged in user_id: %s", userId)
 	interceptor.SendSuccessResponse(w, response, http.StatusOK)
 }
 

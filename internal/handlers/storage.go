@@ -25,5 +25,6 @@ func StorageRemaining(w http.ResponseWriter, r *http.Request) {
 		"storage_quota":     humanReadableStorageQuota,
 		"storage_remaining": humanReadableStorageRemaining,
 	}
+	logger.Log.Infof("Successfully fetched storage remaining for user_id: %s", ctx.Value("userId"))
 	interceptor.SendSuccessResponse(w, response, http.StatusOK)
 }

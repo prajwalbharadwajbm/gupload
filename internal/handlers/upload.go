@@ -50,8 +50,8 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	response := map[string]interface{}{
 		"filepath": filepath,
 	}
+	logger.Log.Infof("Successfully uploaded file for user_id: %s", ctx.Value("userId"))
 	interceptor.SendSuccessResponse(w, response, http.StatusOK)
-
 }
 
 func uploadUserFiles(ctx context.Context, file multipart.File, header *multipart.FileHeader) (string, bool, error) {

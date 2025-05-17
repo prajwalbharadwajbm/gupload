@@ -82,6 +82,6 @@ func FetchFiles(w http.ResponseWriter, r *http.Request) {
 			"total_pages":  (totalFiles + limit - 1) / limit,
 		},
 	}
-
+	logger.Log.Infof("Successfully fetched files for user_id: %s", ctx.Value("userId"))
 	interceptor.SendSuccessResponse(w, paginatedResponse, http.StatusOK)
 }

@@ -40,6 +40,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	response := map[string]interface{}{
 		"userID": userID,
 	}
+	logger.Log.Infof("Successfully registered user_id: %s", userID)
 	interceptor.SendSuccessResponse(w, response, http.StatusOK)
 }
 
