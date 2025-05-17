@@ -53,6 +53,11 @@ func registerUser(ctx context.Context, userData dtos.User) (string, error) {
 		logger.Log.Error("unable to add user", err)
 		return "", err
 	}
+	err = repository.CreateStorageQuota(ctx, userId)
+	if err != nil {
+		logger.Log.Error("unable to create storage quota", err)
+		return "", err
+	}
 	return userId, nil
 }
 
