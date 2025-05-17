@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"sync"
+	"time"
 
 	_ "github.com/lib/pq"
 	"github.com/prajwalbharadwajbm/gupload/internal/config"
@@ -35,6 +36,8 @@ func initializeClient() {
 		logger.Log.Fatal("failed to connect to db", err)
 	}
 
+	configureConnPoolParams(client)
+
 	err = client.Ping()
 	if err != nil {
 		logger.Log.Fatal("failed to ping db", err)
@@ -51,4 +54,11 @@ func buildConnString() string {
 		config.AppConfigInstance.DB.Password,
 		config.AppConfigInstance.DB.DBname,
 	)
+}
+
+func configureConnPoolParams(client *sql.DB) {
+	client.SetMaxOpenConns(25)
+	client.SetMaxIdleConns(10)
+	client.SetConnMaxLifetime(5 * time.Minute)
+	client.SetConnMaxIdleTime(3 * time.Minute)
 }
