@@ -57,6 +57,10 @@ func (l *Logger) Info(msg string, fields ...interface{}) {
 	l.logger.Info().Msg(msg)
 }
 
+func (l *Logger) Infof(msg string, fields ...interface{}) {
+	l.logger.Info().Msgf(msg, fields...)
+}
+
 func (l *Logger) Error(msg string, err error, fields ...interface{}) {
 	l.logger.Error().Err(err).Msg(msg)
 }
