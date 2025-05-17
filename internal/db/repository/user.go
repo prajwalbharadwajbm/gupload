@@ -38,3 +38,18 @@ func GetUserByUsername(ctx context.Context, userName string) (string, []byte, er
 	}
 	return userId, hashedPassword, nil
 }
+
+func GetUsernameByUserID(ctx context.Context) (string, error) {
+	db := db.GetClient()
+
+	var username string
+	query := `SELECT username FROM users WHERE id = $1::uuid`
+	err := db.QueryRowContext(ctx, query, ctx.Value("userId").(string)).Scan(&username)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", errors.New("user not found")
+		}
+		return "", err
+	}
+	return username, nil
+}
