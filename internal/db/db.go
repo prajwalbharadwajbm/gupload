@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"sync"
 
 	_ "github.com/lib/pq"
 	"github.com/prajwalbharadwajbm/gupload/internal/config"
@@ -11,10 +12,25 @@ import (
 
 const pgConnStrFormat = "host=%s port=%d user=%s password=%s dbname=%s sslmode=disable"
 
+var (
+	client *sql.DB
+	once   sync.Once
+)
+
+// GetClient returns the database client, initializing it if necessary
 func GetClient() *sql.DB {
+	once.Do(func() {
+		initializeClient()
+	})
+	return client
+}
+
+// Initialize the database client
+func initializeClient() {
 	connStr := buildConnString()
 
-	client, err := sql.Open("postgres", connStr)
+	var err error
+	client, err = sql.Open("postgres", connStr)
 	if err != nil {
 		logger.Log.Fatal("failed to connect to db", err)
 	}
@@ -24,8 +40,6 @@ func GetClient() *sql.DB {
 		logger.Log.Fatal("failed to ping db", err)
 	}
 	logger.Log.Info("connected to database")
-
-	return client
 }
 
 func buildConnString() string {
