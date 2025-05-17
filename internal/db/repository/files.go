@@ -21,20 +21,35 @@ func CreateFileLogs(ctx context.Context, filepath string, filename string, size 
 	return nil
 }
 
-func GetFilesByUserId(ctx context.Context) (map[string]any, error) {
+func GetFilesByUserId(ctx context.Context) ([]map[string]any, error) {
 	db := db.GetClient()
 
-	files := models.Files{}
 	query := `SELECT filename, file_path, size_bytes, content_type FROM files WHERE user_id = $1::uuid`
-	err := db.QueryRowContext(ctx, query, ctx.Value("userId")).Scan(&files.Filename, &files.FilePath, &files.SizeBytes, &files.ContentType)
+	rows, err := db.QueryContext(ctx, query, ctx.Value("userId"))
 	if err != nil {
 		return nil, err
 	}
-	filteredResponse := map[string]any{
-		"filename": files.Filename,
-		"filepath": files.FilePath,
-		"Size":     utils.FormatBytes(int64(files.SizeBytes)),
-		"content":  files.ContentType,
+	defer rows.Close()
+
+	var result []map[string]any
+	for rows.Next() {
+		files := models.Files{}
+		err := rows.Scan(&files.Filename, &files.FilePath, &files.SizeBytes, &files.ContentType)
+		if err != nil {
+			return nil, err
+		}
+		filteredResponse := map[string]any{
+			"filename": files.Filename,
+			"filepath": files.FilePath,
+			"Size":     utils.FormatBytes(int64(files.SizeBytes)),
+			"content":  files.ContentType,
+		}
+		result = append(result, filteredResponse)
 	}
-	return filteredResponse, nil
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
