@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/prajwalbharadwajbm/gupload/internal/db/repository"
@@ -45,31 +46,26 @@ func Register(w http.ResponseWriter, r *http.Request) {
 func registerUser(ctx context.Context, userData dtos.User) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
 	if err != nil {
-		logger.Log.Error("unable to hash password", err)
-		return "", err
+		return "", fmt.Errorf("unable to hash password: %w", err)
 	}
 	userId, err := repository.AddUser(ctx, userData.Username, hashedPassword)
 	if err != nil {
-		logger.Log.Error("unable to add user", err)
-		return "", err
+		return "", fmt.Errorf("unable to add user: %w", err)
 	}
 	err = repository.CreateStorageQuota(ctx, userId)
 	if err != nil {
-		logger.Log.Error("unable to create storage quota", err)
-		return "", err
+		return "", fmt.Errorf("unable to create storage quota: %w", err)
 	}
 	return userId, nil
 }
 
 func validateRequestBody(userData dtos.User) (bool, error) {
 	if valid, err := validator.IsValidUsername(userData.Username); !valid || err != nil {
-		logger.Log.Error("username: %s is not valid", err)
-		return false, err
+		return false, fmt.Errorf("invalid username: %w", err)
 	}
 
 	if valid, err := validator.IsValidPassword(userData.Username, userData.Password); !valid || err != nil {
-		logger.Log.Error("password doesn't follow org policy/rule: %s", err)
-		return false, err
+		return false, fmt.Errorf("invalid password: %w", err)
 	}
 	return true, nil
 }

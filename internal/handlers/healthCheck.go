@@ -18,8 +18,10 @@ func HealthCheck(w http.ResponseWriter, r *http.Request) {
 	}
 	healthCheckObj, err := json.Marshal(envelope)
 	if err != nil {
-		logger.Log.Error("could not marshal to json", err)
+		logger.Log.Error("failed to marshal health check response", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(healthCheckObj)
-
 }

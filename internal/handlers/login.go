@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/prajwalbharadwajbm/gupload/internal/db/repository"
@@ -51,14 +52,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		"user_id": userId,
 	}
 	interceptor.SendSuccessResponse(w, response, http.StatusOK)
-
 }
 
 func authenticateUser(ctx context.Context, userData dtos.User) (bool, string, error) {
 	userId, hashedPassword, err := repository.GetUserByUsername(ctx, userData.Username)
 	if err != nil {
-		logger.Log.Error("unable to fetch user by its username", err)
-		return false, "", err
+		return false, "", fmt.Errorf("unable to fetch user by username: %w", err)
 	}
 	if userId == "" {
 		return false, "", nil

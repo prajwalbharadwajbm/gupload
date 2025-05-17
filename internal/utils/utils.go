@@ -2,12 +2,11 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"strconv"
-
-	"github.com/prajwalbharadwajbm/gupload/internal/logger"
 )
 
 func FetchDataFromRequestBody[T any](request *http.Request) (T, error) {
@@ -15,15 +14,13 @@ func FetchDataFromRequestBody[T any](request *http.Request) (T, error) {
 
 	body, err := io.ReadAll(request.Body)
 	if err != nil {
-		logger.Log.Error("unable to read request body", err)
-		return data, err
+		return data, fmt.Errorf("unable to read request body: %w", err)
 	}
 	defer request.Body.Close()
 
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		logger.Log.Error("unable to unmarshal request body", err)
-		return data, err
+		return data, fmt.Errorf("unable to unmarshal request body: %w", err)
 	}
 	return data, nil
 }

@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"fmt"
+	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -29,7 +29,7 @@ func GenerateToken(userId string) (string, error) {
 
 	jwtSecret := config.AppConfigInstance.JWTSecret
 	if jwtSecret == "" {
-		return "", fmt.Errorf("JWT secret not configured")
+		return "", errors.New("JWT secret not configured")
 	}
 
 	tokenString, err := token.SignedString([]byte(jwtSecret))
@@ -44,12 +44,12 @@ func ValidateToken(tokenString string) (*Claims, error) {
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, errors.New("unexpected signing method")
 		}
 
 		jwtSecret := config.AppConfigInstance.JWTSecret
 		if jwtSecret == "" {
-			return nil, fmt.Errorf("JWT secret not configured")
+			return nil, errors.New("JWT secret not configured")
 		}
 
 		return []byte(jwtSecret), nil
@@ -59,7 +59,7 @@ func ValidateToken(tokenString string) (*Claims, error) {
 	}
 
 	if !token.Valid {
-		return nil, fmt.Errorf("invalid token")
+		return nil, errors.New("invalid token")
 	}
 	return claims, nil
 }
