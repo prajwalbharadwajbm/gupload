@@ -5,6 +5,9 @@ Gupload is a Go-based file upload service that allows users to securely upload, 
 For routing endpoints, I'm using julienschmidt/httprouter. PostgreSQL as my database. I've written an auth middleware to validate JWT tokens and pass userID down through the request context. Each request has its context downstreamed for any cancellation from the client.
 Using environment-based configs makes it easier to store and isolate secrets across environments and deploy to cloud. Log levels are set up as info, debug and error wrapping around zerolog.
 
+## Architecture
+![gupload](https://github.com/user-attachments/assets/e62739a4-4c3d-482c-84e5-0214753d4d8a)
+
 ## Features
 
 - **User Authentication**: Secure registration and login system using JWT tokens
