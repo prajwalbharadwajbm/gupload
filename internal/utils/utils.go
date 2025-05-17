@@ -39,3 +39,34 @@ func StringToInt(s string) int {
 	}
 	return i
 }
+
+func FormatBytes(sizeInBytes int64) string {
+	const (
+		KB = 1024
+		MB = 1024 * KB
+		GB = 1024 * MB
+		TB = 1024 * GB
+	)
+
+	var unit string
+	var value float64
+
+	switch {
+	case sizeInBytes >= TB:
+		unit = "TB"
+		value = float64(sizeInBytes) / TB
+	case sizeInBytes >= GB:
+		unit = "GB"
+		value = float64(sizeInBytes) / GB
+	case sizeInBytes >= MB:
+		unit = "MB"
+		value = float64(sizeInBytes) / MB
+	case sizeInBytes >= KB:
+		unit = "KB"
+		value = float64(sizeInBytes) / KB
+	default:
+		return fmt.Sprintf("%d B", sizeInBytes)
+	}
+
+	return fmt.Sprintf("%.2f %s", value, unit)
+}

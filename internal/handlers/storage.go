@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/prajwalbharadwajbm/gupload/internal/db/repository"
 	"github.com/prajwalbharadwajbm/gupload/internal/interceptor"
 	"github.com/prajwalbharadwajbm/gupload/internal/logger"
+	"github.com/prajwalbharadwajbm/gupload/internal/utils"
 )
 
 func StorageRemaining(w http.ResponseWriter, r *http.Request) {
@@ -18,17 +18,12 @@ func StorageRemaining(w http.ResponseWriter, r *http.Request) {
 		interceptor.SendErrorResponse(w, "", http.StatusInternalServerError)
 		return
 	}
-	storageQuotaInMB, storageRemainingInMB := convertToHumanReadable(storageQuota, storageRemaining)
+	humanReadableStorageQuota := utils.FormatBytes(int64(storageQuota))
+	humanReadableStorageRemaining := utils.FormatBytes(int64(storageRemaining))
+
 	response := map[string]interface{}{
-		"storage_quota":     storageQuotaInMB,
-		"storage_remaining": storageRemainingInMB,
+		"storage_quota":     humanReadableStorageQuota,
+		"storage_remaining": humanReadableStorageRemaining,
 	}
 	interceptor.SendSuccessResponse(w, response, http.StatusOK)
-}
-
-func convertToHumanReadable(storageQuota, storageRemaining int) (string, string) {
-	quotaMB := float64(storageQuota) / 1024 / 1024
-	remainingMB := float64(storageRemaining) / 1024 / 1024
-
-	return fmt.Sprintf("%.3f MB", quotaMB), fmt.Sprintf("%.3f MB", remainingMB)
 }
