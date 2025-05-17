@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -35,6 +36,10 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	filepath, ok, err := uploadUserFiles(ctx, file, header)
 	if err != nil {
 		logger.Log.Error("unable to upload user files", err)
+		if err.Error() != "" && err.Error() == "file with name already exists" {
+			interceptor.SendErrorResponse(w, "File with this name already exists. Please rename your file and try again.", http.StatusConflict)
+			return
+		}
 		interceptor.SendErrorResponse(w, "GUPLD202", http.StatusBadRequest)
 		return
 	}
@@ -54,6 +59,15 @@ func uploadUserFiles(ctx context.Context, file multipart.File, header *multipart
 	if err != nil {
 		logger.Log.Error("unable to get username by user ID", err)
 		return "", false, fmt.Errorf("failed to get username: %w", err)
+	}
+
+	// Check if a file with the same name already exists
+	exists, err := repository.CheckFileExists(ctx, header.Filename)
+	if err != nil {
+		return "", false, fmt.Errorf("unable to check if file exists: %w", err)
+	}
+	if exists {
+		return "", false, errors.New("file with name already exists")
 	}
 
 	ok, err := checkStorageAvailability(ctx, header)

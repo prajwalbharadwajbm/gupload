@@ -53,3 +53,16 @@ func GetFilesByUserId(ctx context.Context) ([]map[string]any, error) {
 
 	return result, nil
 }
+
+func CheckFileExists(ctx context.Context, filename string) (bool, error) {
+	db := db.GetClient()
+
+	var count int
+	checkQuery := `SELECT COUNT(*) FROM files WHERE user_id = $1::uuid AND filename = $2 AND is_deleted = FALSE`
+	err := db.QueryRowContext(ctx, checkQuery, ctx.Value("userId"), filename).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}
