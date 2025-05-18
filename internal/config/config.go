@@ -51,9 +51,9 @@ func loadDatabaseConfigs() {
 	AppConfigInstance.DB.Host = utils.GetEnv("DB_HOST", "localhost")
 	portStr := utils.GetEnv("DB_PORT", "5432")
 	AppConfigInstance.DB.Port = utils.StringToInt(portStr)
-	AppConfigInstance.DB.User = utils.GetEnv("DB_USER", "postgres")
-	AppConfigInstance.DB.Password = utils.GetEnv("DB_PASSWORD", "")
-	AppConfigInstance.DB.DBname = utils.GetEnv("DB_NAME", "fileupload")
+	AppConfigInstance.DB.User = utils.GetEnv("POSTGRES_USER", "postgres")
+	AppConfigInstance.DB.Password = utils.GetEnv("POSTGRES_PASSWORD", "")
+	AppConfigInstance.DB.DBname = utils.GetEnv("POSTGRES_DB", "fileupload")
 }
 
 func loadJWTConfigs() {
