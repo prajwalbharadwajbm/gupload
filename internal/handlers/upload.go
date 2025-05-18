@@ -15,6 +15,8 @@ import (
 	"github.com/prajwalbharadwajbm/gupload/internal/logger"
 )
 
+const basePath = "./uploads/%s/"
+
 func Upload(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -78,7 +80,7 @@ func uploadUserFiles(ctx context.Context, file multipart.File, header *multipart
 		return "", ok, nil
 	}
 
-	dirPath := fmt.Sprintf("./gupload/%s/", username)
+	dirPath := fmt.Sprintf(basePath, username)
 	if err := os.MkdirAll(dirPath, 0755); err != nil {
 		return "", false, fmt.Errorf("unable to create directory: %w", err)
 	}
