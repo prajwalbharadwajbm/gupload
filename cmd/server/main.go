@@ -22,7 +22,7 @@ func init() {
 func initializeGlobalLogger() {
 	env := config.AppConfigInstance.GeneralConfig.Env
 	logLevel := config.AppConfigInstance.GeneralConfig.LogLevel
-	logger.InitializeGlobalLogger(logLevel, env, version+"-file-upload-service")
+	logger.InitializeGlobalLogger(logLevel, env, version+"-gupload-service")
 	logger.Log.Info("loaded the global logger")
 }
 
