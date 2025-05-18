@@ -30,7 +30,7 @@ Using environment-based configs makes it easier to store and isolate secrets acr
 2. Configure your environment variables in .env file
 3. Run the server: `go run ./cmd/server/main.go`
 
-## Architecture
+## Architecture Components Folder Wise
 
 The project follows a clean architecture approach:
 
